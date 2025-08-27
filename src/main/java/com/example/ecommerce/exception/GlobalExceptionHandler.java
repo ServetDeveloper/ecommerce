@@ -13,4 +13,9 @@ public class GlobalExceptionHandler {
   public ResponseEntity<String> handleNotFount (EntityNotFoundException ex) {
     return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
   }
+
+  @ExceptionHandler(InvalidPasswordException.class)
+  public ResponseEntity<String> handleUnauthorized (InvalidPasswordException ex) {
+    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
+  }
 }

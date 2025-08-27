@@ -1,9 +1,11 @@
 package com.example.ecommerce.services;
 
+import com.example.ecommerce.dtos.ChangePasswordRequest;
 import com.example.ecommerce.dtos.RegisterUserRequest;
 import com.example.ecommerce.dtos.UpdateUserRequest;
 import com.example.ecommerce.dtos.UserDto;
 import com.example.ecommerce.entities.User;
+import com.example.ecommerce.exception.InvalidPasswordException;
 import com.example.ecommerce.mappers.UserMapper;
 import com.example.ecommerce.repositories.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -64,6 +66,21 @@ public class UserService {
     userRepository.deleteById(id);
 
     return userMapper.toUserDto(user);
+  }
+
+  public void changePassword(Long id, ChangePasswordRequest request) {
+    User user = userRepository.findById(id).orElseThrow(
+      ( () -> new EntityNotFoundException("User not found with this id: " + id))
+    );
+
+    if (!user.getPassword().equals(request.getOldPassword())) {
+      throw new InvalidPasswordException("Old password is incorrect");
+    }
+
+    user.setPassword(request.getNewPassword());
+
+    userRepository.save(user);
+
   }
 
 }

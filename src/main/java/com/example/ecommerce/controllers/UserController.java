@@ -1,5 +1,6 @@
 package com.example.ecommerce.controllers;
 
+import com.example.ecommerce.dtos.ChangePasswordRequest;
 import com.example.ecommerce.dtos.RegisterUserRequest;
 import com.example.ecommerce.dtos.UpdateUserRequest;
 import com.example.ecommerce.dtos.UserDto;
@@ -66,4 +67,15 @@ public class UserController {
 
     return ResponseEntity.ok(userDto);
   }
+
+  @PostMapping("/{id}/change-password")
+  public ResponseEntity<Void> changePassword(@PathVariable Long id,
+                                             @RequestBody ChangePasswordRequest request
+  ) {
+
+    userService.changePassword(id, request);
+
+    return ResponseEntity.noContent().build();
+  }
+
 }
