@@ -19,4 +19,8 @@ public class User {
   private String name;
   private String email;
   private String password;
+
+  public void changePassword(String oldPassword, String newPassword) {
+    this.password = newPassword;
+  }
 }

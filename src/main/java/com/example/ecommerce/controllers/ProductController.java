@@ -5,12 +5,14 @@ import com.example.ecommerce.services.ProductService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/product")
+@RequestMapping("/products")
 public class ProductController {
 
   private final ProductService productService;
@@ -28,12 +30,27 @@ public class ProductController {
       .orElse(ResponseEntity.notFound().build());
   }
 
-//  @PostMapping
-//  public ResponseEntity<ProductDto> createProduct(@RequestParam ProductDto productDto) {
-//    if(productDto == null) {
-//      ResponseEntity.notFound().build();
-//    }
-//
-//    ResponseEntity.ok(ProductDto);
-//  }
+  @PostMapping
+  public ResponseEntity<ProductDto> createProduct(@RequestBody ProductDto productDtoParam,
+                                                  UriComponentsBuilder uriBuilder) {
+    ProductDto productDto = productService.createProduct(productDtoParam);
+
+    URI uri = uriBuilder.path("/products/{id}").buildAndExpand(productDto.getId()).toUri();
+    return ResponseEntity.created(uri).body(productDto);
+  }
+
+  @PutMapping("/{id}")
+  public ResponseEntity<ProductDto> updateProduct(@PathVariable Long id,
+                                                  @RequestBody ProductDto productDtoParam) {
+    ProductDto productDto = productService.updateProduct(id, productDtoParam);
+
+    return ResponseEntity.ok(productDto);
+  }
+
+  @DeleteMapping("/{id}")
+  public ResponseEntity<ProductDto> deleteProduct(@PathVariable Long id) {
+    ProductDto productDto = productService.deleteProduct(id);
+
+    return ResponseEntity.ok(productDto);
+  }
 }

@@ -4,8 +4,6 @@ import com.example.ecommerce.dtos.ChangePasswordRequest;
 import com.example.ecommerce.dtos.RegisterUserRequest;
 import com.example.ecommerce.dtos.UpdateUserRequest;
 import com.example.ecommerce.dtos.UserDto;
-import com.example.ecommerce.entities.User;
-import com.example.ecommerce.repositories.UserRepository;
 import com.example.ecommerce.services.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -53,10 +51,6 @@ public class UserController {
   public ResponseEntity<UserDto> updateUser(@PathVariable Long id,
                                             @RequestBody UpdateUserRequest request) {
     UserDto userDto = userService.updateUser(id, request);
-
-    if (userDto == null) {
-      return ResponseEntity.notFound().build();
-    }
 
     return ResponseEntity.ok(userDto);
   }

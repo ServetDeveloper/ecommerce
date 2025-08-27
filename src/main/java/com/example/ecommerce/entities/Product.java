@@ -1,17 +1,15 @@
 package com.example.ecommerce.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
 @Table(name="product")
+@Data
 public class Product {
   @Id()
   @Column(name = "product_id")

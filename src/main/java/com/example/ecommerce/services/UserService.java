@@ -10,11 +10,10 @@ import com.example.ecommerce.mappers.UserMapper;
 import com.example.ecommerce.repositories.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.transaction.annotation.Transactional;
+
 
 import java.util.List;
 import java.util.Optional;
@@ -68,6 +67,7 @@ public class UserService {
     return userMapper.toUserDto(user);
   }
 
+  @Transactional
   public void changePassword(Long id, ChangePasswordRequest request) {
     User user = userRepository.findById(id).orElseThrow(
       ( () -> new EntityNotFoundException("User not found with this id: " + id))
@@ -77,7 +77,7 @@ public class UserService {
       throw new InvalidPasswordException("Old password is incorrect");
     }
 
-    user.setPassword(request.getNewPassword());
+    user.changePassword(request.getOldPassword(), request.getNewPassword());
 
     userRepository.save(user);
 

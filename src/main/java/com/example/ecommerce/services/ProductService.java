@@ -1,23 +1,18 @@
 package com.example.ecommerce.services;
 
 import com.example.ecommerce.dtos.ProductDto;
-import com.example.ecommerce.dtos.RegisterUserRequest;
 import com.example.ecommerce.entities.Product;
 import com.example.ecommerce.mappers.ProductMapper;
 import com.example.ecommerce.repositories.ProductRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
-
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 @AllArgsConstructor
-public class ProductService {
+public class  ProductService {
 
   private final ProductRepository productRepository;
   private final ProductMapper productMapper;
@@ -41,5 +36,31 @@ public class ProductService {
       .map(productMapper::toProductDto);
   }
 
+  public ProductDto createProduct(ProductDto productDto) {
+    Product product = productMapper.toProductEntity(productDto);
+    productDto.setId(product.getId());
 
+    productRepository.save(product);
+
+    return productMapper.toProductDto(product);
+  }
+
+  public ProductDto updateProduct(Long id, ProductDto productDto) {
+    Product product = productRepository.findById(id).orElseThrow(
+      () -> new EntityNotFoundException("Product not found with this id: " + id));
+
+    productMapper.update(productDto, product);
+    productRepository.save(product);
+
+    return productMapper.toProductDto(product);
+  }
+
+  public ProductDto deleteProduct(Long id) {
+    Product product = productRepository.findById(id).orElseThrow(
+      () -> new EntityNotFoundException("Product not found wtih this id: " + id));
+
+    productRepository.deleteById(id);
+
+    return productMapper.toProductDto(product);
+  }
 }
