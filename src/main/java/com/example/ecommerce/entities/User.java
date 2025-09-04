@@ -1,9 +1,6 @@
 package com.example.ecommerce.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
@@ -15,12 +12,19 @@ public class User {
 
   @Id
   @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
+  @Column(nullable = false, unique = true)
   private Long id;
+
+  @Column(nullable = false)
   private String name;
+
+  @Column(nullable = false)
   private String email;
+
+  @Column(nullable = false)
   private String password;
 
-  public void changePassword(String oldPassword, String newPassword) {
+  public void changePassword(String newPassword) {
     this.password = newPassword;
   }
 }

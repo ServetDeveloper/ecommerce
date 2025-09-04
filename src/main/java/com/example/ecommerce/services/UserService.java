@@ -77,10 +77,14 @@ public class UserService {
       throw new InvalidPasswordException("Old password is incorrect");
     }
 
-    user.changePassword(request.getOldPassword(), request.getNewPassword());
+    user.changePassword(request.getNewPassword());
 
     userRepository.save(user);
 
+  }
+
+  public boolean existsByEmail(String email) {
+    return userRepository.existsByEmail(email);
   }
 
 }

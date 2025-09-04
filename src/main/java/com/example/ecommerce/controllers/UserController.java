@@ -5,7 +5,11 @@ import com.example.ecommerce.dtos.RegisterUserRequest;
 import com.example.ecommerce.dtos.UpdateUserRequest;
 import com.example.ecommerce.dtos.UserDto;
 import com.example.ecommerce.services.UserService;
+import com.example.ecommerce.validation.groups.OnCreate;
+import com.example.ecommerce.validation.groups.OnUpdate;
+import jakarta.validation.constraints.Min;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -14,6 +18,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/users")
+@Validated
 public class UserController {
 
   private final UserService userService;
@@ -24,7 +29,7 @@ public class UserController {
 
 
   @GetMapping("/{id}")
-  public ResponseEntity<UserDto> getUserById(@PathVariable Long id) {
+  public ResponseEntity<UserDto> getUserById(@PathVariable @Min(1) Long id) {
     return userService.getUserById(id)
       .map(ResponseEntity::ok)
       .orElse(ResponseEntity.notFound().build());
@@ -39,7 +44,7 @@ public class UserController {
 
   @PostMapping
   public ResponseEntity<UserDto> createUser(
-    @RequestBody RegisterUserRequest request,
+    @RequestBody @Validated(OnCreate.class) RegisterUserRequest request,
     UriComponentsBuilder uriBuilder) {
 
     UserDto userDto = userService.createUser(request);
@@ -48,23 +53,23 @@ public class UserController {
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<UserDto> updateUser(@PathVariable Long id,
-                                            @RequestBody UpdateUserRequest request) {
+  public ResponseEntity<UserDto> updateUser(@PathVariable @Min(1) Long id,
+                                            @RequestBody @Validated(OnUpdate.class) UpdateUserRequest request) {
     UserDto userDto = userService.updateUser(id, request);
 
     return ResponseEntity.ok(userDto);
   }
 
   @DeleteMapping("/{id}")
-  public ResponseEntity<UserDto> deleteUser(@PathVariable Long id) {
+  public ResponseEntity<UserDto> deleteUser(@PathVariable @Min(1) Long id) {
     UserDto userDto = userService.deleteUser(id);
 
     return ResponseEntity.ok(userDto);
   }
 
   @PostMapping("/{id}/change-password")
-  public ResponseEntity<Void> changePassword(@PathVariable Long id,
-                                             @RequestBody ChangePasswordRequest request
+  public ResponseEntity<Void> changePassword(@PathVariable @Min(1) Long id,
+                                             @RequestBody @Validated({OnUpdate.class}) ChangePasswordRequest request
   ) {
 
     userService.changePassword(id, request);
