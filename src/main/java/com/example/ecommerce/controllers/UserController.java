@@ -8,6 +8,7 @@ import com.example.ecommerce.services.UserService;
 import com.example.ecommerce.validation.groups.OnCreate;
 import com.example.ecommerce.validation.groups.OnUpdate;
 import jakarta.validation.constraints.Min;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +27,6 @@ public class UserController {
   public UserController(UserService userService) {
     this.userService = userService;
   }
-
 
   @GetMapping("/{id}")
   public ResponseEntity<UserDto> getUserById(@PathVariable @Min(1) Long id) {
@@ -48,6 +48,7 @@ public class UserController {
     UriComponentsBuilder uriBuilder) {
 
     UserDto userDto = userService.createUser(request);
+
     URI uri = uriBuilder.path("users/{id}").buildAndExpand(userDto.getId()).toUri();
     return ResponseEntity.created(uri).body(userDto);
   }

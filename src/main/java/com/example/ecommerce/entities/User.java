@@ -11,7 +11,7 @@ import lombok.*;
 public class User {
 
   @Id
-  @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(nullable = false, unique = true)
   private Long id;
 
